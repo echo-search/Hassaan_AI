@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hassaan AI Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 30px;
+    }
+    #chat {
+      border: 1px solid #ccc;
+      padding: 15px;
+      height: 400px;
+      overflow-y: scroll;
+      background: #fff;
+    }
+    .user { color: blue; margin-top: 10px; }
+    .bot { color: green; margin-top: 10px; }
+    #inputBox {
+      margin-top: 20px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    input {
+      width: 70%;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Hassaan AI 🤖</h2>
+  <div id="chat"></div>
+
+  <div id="inputBox">
+    <input type="text" id="userInput" placeholder="Ask me anything..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat");
+
+    async function sendMessage() {
+      const userText = document.getElementById("userInput").value;
+      if (!userText) return;
+
+      // Show user message
+      chatBox.innerHTML += `<div class="user"><strong>You:</strong> ${userText}</div>`;
+      document.getElementById("userInput").value = "";
+
+      // System prompt to define Hassaan AI behavior
+      const systemPrompt = "You are Hassaan AI, a smart, friendly, and helpful assistant. If someone asks who you are, always say 'I am Hassaan AI, here to help you.'";
+
+      try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer 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"
+          },
+          body: JSON.stringify({
+            model: "gpt-4",
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userText }
+            ],
+            temperature: 0.7
+          })
+        });
+
+        const data = await response.json();
+        const reply = data.choices[0].message.content;
+
+        chatBox.innerHTML += `<div class="bot"><strong>Hassaan AI:</strong> ${reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+      } catch (error) {
+        chatBox.innerHTML += `<div class="bot"><strong>Hassaan AI:</strong> Something went wrong 😢</div>`;
+        console.error(error);
+      }
+    }
+  </script>
+
+</body>
+      </html>
