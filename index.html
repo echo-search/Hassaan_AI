@@ -1,171 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hassaan AI</title>
-  <link rel="icon" href="favicon.png" type="image/x-icon">
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #343541;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-
-    #chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    .bubble {
-      max-width: 80%;
-      margin-bottom: 15px;
-      padding: 12px 16px;
-      border-radius: 12px;
-      white-space: pre-wrap;
-      line-height: 1.4;
-    }
-
-    .user {
-      align-self: flex-end;
-      background: #10a37f;
-      color: white;
-      text-align: right;
-    }
-
-    .bot {
-      align-self: flex-start;
-      background: #444654;
-      color: white;
-    }
-
-    #input-area {
-      display: flex;
-      padding: 16px;
-      background: #40414f;
-      border-top: 1px solid #2e2f3a;
-    }
-
-    #userInput {
-      flex: 1;
-      padding: 12px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      background: #343541;
-      color: white;
-    }
-
-    #sendBtn {
-      margin-left: 10px;
-      padding: 12px 18px;
-      font-size: 16px;
-      background: #10a37f;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    #sendBtn:hover {
-      background: #0e8a6b;
-    }
-
-    .markdown {
-      line-height: 1.5;
-    }
-
-    code {
-      background: #202123;
-      padding: 2px 4px;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-
-    pre code {
-      display: block;
-      padding: 12px;
-      overflow-x: auto;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="favicon.png" type="image/x-icon">
+<title>Hassaan AI</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    color: #222;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  h1 {
+    color: #00cec9;
+    text-align: center;
+  }
+  p.subtitle {
+    text-align: center;
+    font-style: italic;
+    color: #555;
+  }
+  #response {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    min-height: 80px;
+    white-space: pre-wrap;
+  }
+  input[type="text"] {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    border-radius: 6px;
+    border: 1.5px solid #00cec9;
+  }
+  button {
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 30px;
+    background-color: #00cec9;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+  }
+</style>
 </head>
 <body>
 
-  <div id="chat"></div>
+<h1>Hassaan AI</h1>
+<p class="subtitle">Powered by Hassaan AI backend</p>
 
-  <div id="input-area">
-    <input type="text" id="userInput" placeholder="Ask Hassaan AI anything..." autocomplete="off" />
-    <button id="sendBtn" onclick="sendMessage()">Send</button>
-  </div>
+<input type="text" id="userInput" placeholder="Ask me anything..." />
+<button onclick="askHassaanAI()">Ask</button>
 
-  <script>
-    const chatBox = document.getElementById("chat");
-    const inputBox = document.getElementById("userInput");
-    let messages = [
-      {
-        role: "system",
-        content:
-          "You are Hassaan AI, a helpful, friendly assistant that always replies clearly and creatively. If someone asks who you are, you say: 'I am Hassaan AI, your helpful assistant.'"
-      }
-    ];
+<div id="response"></div>
 
-    function addMessage(text, sender, isMarkdown = false) {
-      const msg = document.createElement("div");
-      msg.classList.add("bubble", sender);
-      msg.innerHTML = isMarkdown ? marked.parse(text) : text;
-      chatBox.appendChild(msg);
-      chatBox.scrollTop = chatBox.scrollHeight;
+<script>
+  async function askHassaanAI() {
+    const input = document.getElementById('userInput').value.trim();
+    const responseDiv = document.getElementById('response');
+
+    if (!input) {
+      responseDiv.textContent = "Please enter a question.";
+      return;
     }
 
-    async function typeReply(text) {
-      const msg = document.createElement("div");
-      msg.classList.add("bubble", "bot");
-      chatBox.appendChild(msg);
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      let i = 0;
-      while (i < text.length) {
-        msg.textContent += text[i++];
-        chatBox.scrollTop = chatBox.scrollHeight;
-        await new Promise(r => setTimeout(r, 10));
-      }
+    if (input.toLowerCase().includes('hassaan ai')) {
+      responseDiv.textContent = "You are chatting with Hassaan AI. How can I assist you?";
+      return;
     }
 
-    async function sendMessage() {
-      const userText = inputBox.value.trim();
-      if (!userText) return;
+    responseDiv.textContent = "Thinking...";
 
-      addMessage(userText, "user");
-      messages.push({ role: "user", content: userText });
-      inputBox.value = "";
+    try {
+      const res = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: input })
+      });
 
-      try {
-        const res = await fetch("http://127.0.0.1:5000/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages })
-        });
+      if (!res.ok) throw new Error(`Server error: ${res.statusText}`);
 
-        const data = await res.json();
-        const reply = data?.choices?.[0]?.message?.content || "No reply.";
-        messages.push({ role: "assistant", content: reply });
-        addMessage(reply, "bot", true);
-      } catch (err) {
-        addMessage("Error talking to Hassaan AI.", "bot");
-        console.error(err);
-      }
+      const data = await res.json();
+      responseDiv.textContent = data.response;
+    } catch (e) {
+      responseDiv.textContent = `Error: ${e.message}`;
     }
+  }
+</script>
 
-    inputBox.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") sendMessage();
-    });
-  </script>
 </body>
 </html>
